@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 //Require the autoload file
 require_once ('vendor/autoload.php');
 
@@ -25,6 +27,36 @@ $f3->route('GET /hello/@name', function($f3, $params) {
     $template = new Template();
     echo $template->render('views/hello.html');
 }
+);
+
+//Define a routing using several parameters
+//In the browser /328/routing-demo/hi/Bessy/Torres
+$f3->route('GET /hi/@first/@last',
+    function($f3, $params)
+    {
+
+    //creating a variable in fat free with key=name and value=parameters, if the user writes hello and name
+    //it redirect the user to views and hello.html
+    $f3->set('first',$params['first']);
+    $f3->set('last',$params['last']);
+    $f3->set('message','Hi');   //I can pass just data also, not just parameters
+
+    //things we want to store, put the parameters in the array
+    $_SESSION['first'] = $f3->get('first'); //getting first from fat free and put in in session
+    $_SESSION['last'] = $f3->get('last');
+
+    $template = new Template();
+    echo $template->render('views/hi.html');
+}
+);
+
+//
+$f3->route('GET /hi-again',
+    function($f3, $params)
+    {
+        echo '<h3>Hello again!' .$_SESSION['first'] . '</h3>';
+
+    }
 );
 
 $f3->route('GET /language/@lang', function($f3, $params)
