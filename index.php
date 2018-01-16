@@ -9,11 +9,21 @@ $f3 = Base::instance();
 //Set debug level (comes after we instantiate f3) 3 is maxi level of debugging
 $f3->set ('DEBUG', 3);
 
+//-----------------------------------------------------------------------------------
+
 //Define a route using parameter, name is like a variable, we can pass any name to it
-//if a run routing-demo/hello/Bessy  (is going to add my name to the message in the page)
+
 $f3->route('GET /hello/@name', function($f3, $params) {
-    $name = $params['name'];
-    echo "<h1>Hello, $name</h1>";
+    //if a run routing-demo/hello/Bessy  (is going to add my name to the message in the page)
+
+    //$name = $params['name'];
+    //echo "<h1>Hello, $name</h1>";
+
+    //creating a variable in fat free with key=name and value=parameters, if the user writes hello and name
+    //it redirect the user to views and hello.html
+    $f3->set('name',$params['name']);
+    $template = new Template();
+    echo $template->render('views/hello.html');
 }
 );
 
@@ -29,8 +39,12 @@ $f3->route('GET /language/@lang', function($f3, $params)
             echo 'Privet!' ; break;
         case 'farsi':
             echo 'Salam!' ; break;
+        //if I want to reroute to my demo index page
+        case 'french':
+            $f3->reroute('/');
+        //404 error
         default:
-            echo 'Hello';
+            $f3->error(404);
     }
 
 }
@@ -60,6 +74,12 @@ $f3->route('GET /jewelry/rings/toe-rings', function(){
 //Define a page2 route
 $f3->route('GET /page2', function() {
     echo '<h1>This is page 2</h1>';
+}
+);
+
+//Define a default route
+$f3->route('GET /', function() {
+    echo '<h1>Routing Demo page</h1>';
 }
 );
 
